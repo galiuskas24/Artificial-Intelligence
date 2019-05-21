@@ -55,23 +55,20 @@ class SearchNode:
         """
         return self.position, self.parent, self.cost, self.heuristic
 
-
     def backtrack(self):
         """
         Reconstruct a path to the initial state from the current node.
         Bear in mind that usually you will reconstruct the path from the 
         final node to the initial.
         """
-        moves = []
-        # make a deep copy to stop any referencing isues.
         node = copy.deepcopy(self)
 
         if node.isRootNode(): 
             # The initial state is the final state
-            return moves        
+            return []
 
-        "**YOUR CODE HERE**"
-        util.raiseNotDefined()
+        # print self.cost, self.heuristic
+        return [self.transition] + self.parent.backtrack()
 
 
 class SearchProblem:
@@ -117,6 +114,14 @@ class SearchProblem:
         util.raiseNotDefined()
 
 
+def nullHeuristic(state, problem=None):
+    """
+    A heuristic function estimates the cost from the current state to the nearest
+    goal in the provided SearchProblem.  This heuristic is trivial.
+    """
+    return 0
+
+
 def tinyMazeSearch(problem):
     """
     Returns a sequence of moves that solves tinyMaze.  For any other maze, the
@@ -125,46 +130,66 @@ def tinyMazeSearch(problem):
     from game import Directions
     s = Directions.SOUTH
     w = Directions.WEST
-    return  [s, s, w, s, w, w, s, w]
+    return [s, s, w, s, w, w, s, w]
+
 
 def depthFirstSearch(problem):
-    """
-    Search the deepest nodes in the search tree first.
+    return universalSearch(problem, util.Stack(), nullHeuristic)
 
-    Your search algorithm needs to return a list of actions that reaches the
-    goal. Make sure to implement a graph search algorithm.
-
-    To get started, you might want to try some of these simple commands to
-    understand the search problem that is being passed in:
-
-    print "Start:", problem.getStartState()
-    print "Is the start a goal?", problem.isGoalState(problem.getStartState())
-    print "Start's successors:", problem.getSuccessors(problem.getStartState())
-    """
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
-    """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    return universalSearch(problem, util.Queue(), nullHeuristic)
+
 
 def uniformCostSearch(problem):
-    """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    buffer = util.PriorityQueueWithFunction(lambda x: x[1])
+    return universalSearch(problem, buffer, nullHeuristic)
 
-def nullHeuristic(state, problem=None):
-    """
-    A heuristic function estimates the cost from the current state to the nearest
-    goal in the provided SearchProblem.  This heuristic is trivial.
-    """
-    return 0
 
 def aStarSearch(problem, heuristic=nullHeuristic):
-    """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    buffer = util.PriorityQueueWithFunction(lambda x: x[1])
+    return universalSearch(problem, buffer, heuristic)
+
+
+def universalSearch(problem, buffer, heuristic):
+    """
+    This is universal greedy search method.
+    There is no logic for already visited state. This method ignores them and continues search.
+
+    :param problem:
+    :param buffer:
+    :param heuristic:
+    :return:
+    """
+    root = SearchNode(position=problem.getStartState())
+    buffer.push((root, 0))  # (node, priority)
+    visited_states = []
+
+    while not buffer.isEmpty():
+
+        curr_node = buffer.pop()[0]
+        curr_pos, curr_par, curr_cost, curr_heur = curr_node.unpack()
+
+        # is finish?
+        if problem.isGoalState(curr_pos):
+            return list(reversed(curr_node.backtrack()))
+
+        # is duplicate?
+        if curr_pos in visited_states: continue
+
+        # add to visited
+        visited_states.append(curr_pos)
+
+        # add next states to buffer
+        for next_position, direction, cost in problem.getSuccessors(curr_pos):
+            next_node = SearchNode(
+                position=next_position,
+                parent=curr_node,
+                transition=direction,
+                cost=(curr_cost + cost),
+                heuristic=heuristic(next_position, problem)
+            )
+            buffer.push((next_node, next_node.cost + next_node.heuristic))
 
 
 # Abbreviations

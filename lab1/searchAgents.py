@@ -294,15 +294,14 @@ class CornersProblem(search.SearchProblem):
         Returns the start state (in your state space, not the full Pacman state
         space)
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return self.startingPosition, (False, False, False, False)
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        position, corners = state
+        return sum(corners) == 4
 
     def getSuccessors(self, state):
         """
@@ -317,14 +316,22 @@ class CornersProblem(search.SearchProblem):
 
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-            # Add a successor state to the successor list if the action is legal
-            # Here's a code snippet for figuring out whether a new position hits a wall:
-            #   x,y = currentPosition
-            #   dx, dy = Actions.directionToVector(action)
-            #   nextx, nexty = int(x + dx), int(y + dy)
-            #   hitsWall = self.walls[nextx][nexty]
+            position, corners = state
+            list_of_corners = list(corners)
 
-            "*** YOUR CODE HERE ***"
+            x, y = position
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+
+            if not self.walls[nextx][nexty]:
+                next_position = (nextx, nexty)
+                cost = 1  # self.costFn(nextposition)
+
+                if next_position in self.corners:
+                    list_of_corners[self.corners.index(next_position)] = True
+
+                next_state = (next_position, tuple(list_of_corners))
+                successors.append((next_state, action, cost))
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
@@ -358,9 +365,15 @@ def cornersHeuristic(state, problem):
     """
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
+    position, corners_TF = state
+    distances = []
 
-    "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    for corner, condition in zip(corners, corners_TF):
+        if not condition:
+            distances.append(util.manhattanDistance(position, corner))
+
+    return 0 if len(distances) == 0 else max(distances)
+
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -452,9 +465,23 @@ def foodHeuristic(state, problem):
     Subsequent calls to this heuristic can access
     problem.heuristicInfo['wallCount']
     """
-    position, foodGrid = state
-    "*** YOUR CODE HERE ***"
-    return 0
+    position, food_grid= state
+    food_list = food_grid.asList()
+    distances = []
+
+    for food_position in food_list:
+        distances.append(realMazeDistance(problem, position, food_position))
+
+    return 0 if len(distances) == 0 else max(distances)
+
+def realMazeDistance(problem, pacman_position, food_position):
+    try:
+        return problem.heuristicInfo[(pacman_position, food_position)]
+    except KeyError:
+        psp = PositionSearchProblem(gameState=problem.startingGameState, start=pacman_position, goal=food_position, visualize=False, warn=False)
+        distance = len(search.breadthFirstSearch(psp))
+        problem.heuristicInfo[(pacman_position, food_position)] = distance
+        return distance
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
@@ -478,14 +505,11 @@ class ClosestDotSearchAgent(SearchAgent):
         Returns a path (a list of actions) to the closest dot, starting from
         gameState.
         """
-        # Here are some useful elements of the startState
-        startPosition = gameState.getPacmanPosition()
-        food = gameState.getFood()
-        walls = gameState.getWalls()
+        # define the problem and goal method
         problem = AnyFoodSearchProblem(gameState)
 
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # just find closest path between startPoint and closest dot
+        return search.breadthFirstSearch(problem)
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
@@ -518,7 +542,7 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         The state is Pacman's position. Fill this in with a goal test that will
         complete the problem definition.
         """
-        x,y = state
+        x, y = state
+        return self.food[x][y]
 
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+
