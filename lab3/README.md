@@ -16,9 +16,7 @@ Run: `python crawler.py`
 </p>
 
 <p align="center">
-
-*w*<sub>*i*</sub> ← *w*<sub>*i*</sub> + *α*⋅ difference
- ⋅ *f*<sub>*i*</sub>(*s*, *a*)
+<b>*w*<sub>*i*</sub> ← *w*<sub>*i*</sub> + *α*⋅ difference ⋅ *f*<sub>*i*</sub>(*s*, *a*)</b>
 </p>
 
 
