@@ -7,13 +7,14 @@ Run: `python classifier.py -t 1`
 Run: `python gridworld.py -a value -i 5`
 
 ### Q-Learning with epsilon-greedy
+
 <p align="center">
-<img src="http://latex.codecogs.com/png.latex?%5Cdpi%7B120%7D%20%24Q_%7B0%7D%28s%2C%20a%29%3D0%244">
+<img src="http://latex.codecogs.com/png.latex?%5Cdpi%7B120%7D%20%24Q_%7B0%7D%28s%2C%20a%29%3D0%24">
 </p>
+
 <p align="center">
 <img src="http://latex.codecogs.com/png.latex?%5Cdpi%7B120%7D%20%24Q_%7Bk&plus;1%7D%28s%2C%20a%29%20%5Cleftarrow%20Q_%7Bk%7D%28s%2C%20a%29&plus;%28%5Calpha%29%5Cleft%5BR%5Cleft%28s%2C%20a%2C%20s%5E%7B%5Cprime%7D%5Cright%29&plus;%5Cgamma%20%5Cmax%20_%7Ba%5E%7B%5Cprime%7D%7D%20Q_%7Bk%7D%5Cleft%28s%5E%7B%5Cprime%7D%2C%20a%5E%7B%5Cprime%7D%5Cright%29-Q_%7Bk%7D%28s%2C%20a%29%5Cright%5D%24">
 </p>
-
 
 
 Run: `python crawler.py`
