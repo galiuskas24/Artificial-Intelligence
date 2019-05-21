@@ -23,3 +23,7 @@ Run: `python pacman.py -p ApproximateQAgent -a extractor=SimpleExtractor -x 50 -
  ⋅ *f*<sub>*i*</sub>(*s*, *a*)
 
 difference = (*r*+*γ*max<sub>*a*<sup>′</sup></sub>*Q*(*s*<sup>′</sup>,*a*<sup>′</sup>)) − *Q*(*s*, *a*)
+
+\(w_{i} \leftarrow w_{i}+\alpha \cdot\) difference \(\cdot f_{i}(s, a)\)
+
+difference\(=\left(r+\gamma \max _{a^{\prime}} Q\left(s^{\prime}, a^{\prime}\right)\right)-Q(s, a)\)
