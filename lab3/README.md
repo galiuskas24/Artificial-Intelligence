@@ -10,6 +10,11 @@ Run: `python gridworld.py -a value -i 5`
 Run: `python crawler.py`
 
 ### Q-Learning (approximation)
+
+<p align="center">
+<img src="https://drive.google.com/uc?export=view&id=1QuUzKRB1iXJFpOhzUaUgcuGGCbA0-JK7">
+</p>
+
 Run: `python pacman.py -p ApproximateQAgent -a extractor=SimpleExtractor -x 50 -n 60 -l mediumGrid`
 
 Run: `python pacman.py -p ApproximateQAgent -a extractor=SimpleExtractor -x 50 -n 60 -l mediumClassic`
