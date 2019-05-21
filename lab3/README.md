@@ -18,3 +18,8 @@ Run: `python crawler.py`
 Run: `python pacman.py -p ApproximateQAgent -a extractor=SimpleExtractor -x 50 -n 60 -l mediumGrid`
 
 Run: `python pacman.py -p ApproximateQAgent -a extractor=SimpleExtractor -x 50 -n 60 -l mediumClassic`
+
+*w*<sub>*i*</sub> ← *w*<sub>*i*</sub> + *α*⋅ difference
+ ⋅ *f*<sub>*i*</sub>(*s*, *a*)
+
+difference = (*r*+*γ*max<sub>*a*<sup>′</sup></sub>*Q*(*s*<sup>′</sup>,*a*<sup>′</sup>)) − *Q*(*s*, *a*)
