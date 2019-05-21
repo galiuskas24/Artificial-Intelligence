@@ -1,9 +1,26 @@
 ## Naive Bayes
 
+<p align="center">
+<img src="http://latex.codecogs.com/gif.latex?%5Cdpi%7B120%7D%20h_%7BM%20A%20P%7D%3D%5Carg%20%5Cmax%20_%7Bh_%7Bi%7D%20%5Cin%20H%7D%20P%5Cleft%28h_%7Bi%7D%20%7C%20f%5Cright%29%3D%5Carg%20%5Cmax%20_%7Bh_%7Bi%7D%20%5Cin%20H%7D%20%5Cfrac%7BP%5Cleft%28f%20%7C%20h_%7Bi%7D%5Cright%29%20P%5Cleft%28h_%7Bi%7D%5Cright%29%7D%7BP%28f%29%7D%3D%5Carg%20%5Cmax%20_%7Bh_%7Bi%7D%20%5Cin%20H%7D%20P%5Cleft%28f%20%7C%20h_%7Bi%7D%5Cright%29%20P%5Cleft%28h_%7Bi%7D%5Cright%29">
+</p>
+
+<p align="center">
+<img src="http://latex.codecogs.com/gif.latex?%5Cdpi%7B120%7D%20h_%7BM%20A%20P%7D%3D%5Carg%20%5Cmax%20_%7Bh_%7Bi%7D%20%5Cin%20H%7D%20P%5Cleft%28h_%7Bi%7D%5Cright%29%20%5Cprod_%7Bj%7D%20P%5Cleft%28f_%7Bj%7D%20%7C%20h_%7Bi%7D%5Cright%29">
+</p>
+
 Run: `python classifier.py -t 1`
 
 ## Reinforcement Learning
 ### Value iteration
+<p align="center">
+<img src="http://latex.codecogs.com/gif.latex?%5Cdpi%7B120%7D%20V_%7B0%7D%28s%29%3D0">
+</p>
+
+<p align="center">
+<img src="http://latex.codecogs.com/gif.latex?%5Cdpi%7B120%7D%20V_%7Bk&plus;1%7D%28s%29%20%5Cleftarrow%20%5Cmax%20_%7Ba%7D%20%5Csum_%7Bs%5E%7B%5Cprime%7D%7D%20T%5Cleft%28s%2C%20a%2C%20s%5E%7B%5Cprime%7D%5Cright%29%5Cleft%5BR%5Cleft%28s%2C%20a%2C%20s%5E%7B%5Cprime%7D%5Cright%29&plus;%5Cgamma%20V_%7Bk%7D%5Cleft%28s%5E%7B%5Cprime%7D%5Cright%29%5Cright%5D">
+</p>
+
+
 Run: `python gridworld.py -a value -i 5`
 
 ### Q-Learning with epsilon-greedy
