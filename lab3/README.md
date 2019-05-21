@@ -15,15 +15,15 @@ Run: `python crawler.py`
 <img src="https://drive.google.com/uc?export=view&id=1QuUzKRB1iXJFpOhzUaUgcuGGCbA0-JK7">
 </p>
 
-Run: `python pacman.py -p ApproximateQAgent -a extractor=SimpleExtractor -x 50 -n 60 -l mediumGrid`
-
-Run: `python pacman.py -p ApproximateQAgent -a extractor=SimpleExtractor -x 50 -n 60 -l mediumClassic`
+<p align="center">
 
 *w*<sub>*i*</sub> ← *w*<sub>*i*</sub> + *α*⋅ difference
  ⋅ *f*<sub>*i*</sub>(*s*, *a*)
+<br>
 
 difference = (*r*+*γ*max<sub>*a*<sup>′</sup></sub>*Q*(*s*<sup>′</sup>,*a*<sup>′</sup>)) − *Q*(*s*, *a*)
+</p>
 
-\(w_{i} \leftarrow w_{i}+\alpha \cdot\) difference \(\cdot f_{i}(s, a)\)
+Run: `python pacman.py -p ApproximateQAgent -a extractor=SimpleExtractor -x 50 -n 60 -l mediumGrid`
 
-difference\(=\left(r+\gamma \max _{a^{\prime}} Q\left(s^{\prime}, a^{\prime}\right)\right)-Q(s, a)\)
+Run: `python pacman.py -p ApproximateQAgent -a extractor=SimpleExtractor -x 50 -n 60 -l mediumClassic`
