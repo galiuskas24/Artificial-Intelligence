@@ -18,8 +18,8 @@ Run: `python crawler.py`
 <p align="center">
 *w*<sub>*i*</sub> ← *w*<sub>*i*</sub> + *α*⋅ difference ⋅ *f*<sub>*i*</sub>(*s*, *a*)
 </p>
-
-
+<p><span class="math display">\[Q(s, a)=\sum_{i=1}^{n} f_{i}(s, a) w_{i}\]</span></p>
+<p><span class="math display">\[Q(s, a)=\sum_{i=1}^{n} f_{i}(s, a) w_{i}\]</span></p>
 difference = (*r*+*γ*max<sub>*a*<sup>′</sup></sub>*Q*(*s*<sup>′</sup>,*a*<sup>′</sup>)) − *Q*(*s*, *a*)
 
 
