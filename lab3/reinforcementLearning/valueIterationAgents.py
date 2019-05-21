@@ -41,10 +41,23 @@ class ValueIterationAgent(ValueEstimationAgent):
         self.mdp = mdp
         self.discount = discount
         self.iterations = iterations
-        self.values = util.Counter() # A Counter is a dict with default 0
+        self.values = util.Counter()
 
-        # Write value iteration code here
-        "*** YOUR CODE HERE ***"
+        # --------------Train values (usefulness)------------------
+        for iteration in range(self.iterations):
+            iteration_values = util.Counter()
+
+            for state in self.mdp.getStates():
+
+                # We can not calculate for terminal/final state
+                if self.mdp.isTerminal(state): continue
+
+                # Calculate max Q value for temp state
+                q_values = [self.getQValue(state, action) for action in self.mdp.getPossibleActions(state)]
+                iteration_values[state] = 0. if len(q_values) == 0 else max(q_values)
+
+            # Update values after every iteration
+            self.values = iteration_values
 
 
     def getValue(self, state):
@@ -53,14 +66,16 @@ class ValueIterationAgent(ValueEstimationAgent):
         """
         return self.values[state]
 
-
     def computeQValueFromValues(self, state, action):
         """
           Compute the Q-value of action in state from the
           value function stored in self.values.
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        q_value = 0.
+        for next_state, prob in self.mdp.getTransitionStatesAndProbs(state, action):
+            q_value += prob*(self.mdp.getReward(state, action, next_state) + self.discount*self.getValue(next_state))
+
+        return q_value
 
     def computeActionFromValues(self, state):
         """
@@ -71,8 +86,15 @@ class ValueIterationAgent(ValueEstimationAgent):
           there are no legal actions, which is the case at the
           terminal state, you should return None.
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # Terminal state do not have action
+        if self.mdp.isTerminal(state): return None
+
+        # Calculate best Q value
+        actions = self.mdp.getPossibleActions(state)
+        q_values = [self.getQValue(state, action) for action in actions]
+
+        return actions[util.maxIndexWithUniformSelction(q_values)]
+        # return actions[q_values.index(max(q_values))] # NOT uniform
 
     def getPolicy(self, state):
         return self.computeActionFromValues(state)

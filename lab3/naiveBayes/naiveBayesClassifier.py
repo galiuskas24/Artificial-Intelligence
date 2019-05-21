@@ -25,17 +25,38 @@ class NaiveBayesClassifier(object):
 
         To get the list of all possible features or labels, use self.features and self.legalLabels.
         """
-
         self.features = trainingData[0].keys() # the names of the features in the dataset
-
         self.prior = util.Counter() # probability over labels
         self.conditionalProb = util.Counter() # Conditional probability of feature feat for a given class having value v
-                                      # HINT: could be indexed by (feat, label, value)
 
-        # TODO:
-        # construct (and store) the normalized smoothed priors and conditional probabilities
+        # ------------COUNTING-------------------
+        prior_cnt, cond_prob_cnt = util.Counter(), util.Counter()
+        for sample, output in zip(trainingData, trainingLabels):
+            prior_cnt[output] += 1
+            for feature in self.features: cond_prob_cnt[(feature, output, sample[feature])] += 1
 
-        "*** YOUR CODE HERE ***"
+        # ------------SMOOTHING--------------------
+        '''
+        t = number of times event occurs
+        n = total number of trials
+        d = number of different classes (OR len(distinct(output)))
+        
+        Basic: P(Hi) = t/n
+        Smoothed: P(Hi) = (t + k)/(n + k*d)
+        '''
+
+        # P(Hi) + smoothing
+        for output_class in self.legalLabels:
+            smoothed = float(prior_cnt[output_class] + self.k)/(len(trainingLabels) + self.k * len(self.legalLabels))
+            self.prior[output_class] = smoothed
+
+        # P(Fj | Hi) + smoothing
+        for key, count in cond_prob_cnt.iteritems():
+            feature, output, value = key
+            feature_value = 0 if feature not in self.featureValues else len(self.featureValues[feature])
+            smoothed = float(count + self.k)/(prior_cnt[output] + self.k * feature_value)
+            self.conditionalProb[key] = smoothed
+
 
     def predict(self, testData):
         """
@@ -66,15 +87,7 @@ class NaiveBayesClassifier(object):
         To get the list of all possible features or labels, use self.features and
         self.legalLabels.
         """
-        joint = util.Counter()
-
-        for label in self.legalLabels:
-            # calculate the joint probabilities for each class
-            "*** YOUR CODE HERE ***"
-
-            pass
-
-        return joint
+        return self.calculateProbabilities(instance, lambda x: x)
 
 
     def calculateLogJointProbabilities(self, instance):
@@ -86,12 +99,20 @@ class NaiveBayesClassifier(object):
         To get the list of all possible features or labels, use self.features and
         self.legalLabels.
         """
-        logJoint = util.Counter()
+        return self.calculateProbabilities(instance, lambda x: math.log(x))
+
+    def calculateProbabilities(self, instance, function):
+
+        joint = util.Counter()
 
         for label in self.legalLabels:
-            #calculate the log joint probabilities for each class
-            "*** YOUR CODE HERE ***"
+            # calculate the joint probabilities for each class
+            # P(Hi)*P(Fj*...*Fk | Hi)
+            prob = self.prior[label]
 
-            pass    
+            for feature in self.features:
+                prob *= self.conditionalProb[(feature, label, instance[feature])]
 
-        return logJoint
+            joint[label] = function(prob)
+
+        return joint

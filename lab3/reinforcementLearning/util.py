@@ -504,6 +504,9 @@ def flipCoin( p ):
     r = random.random()
     return r < p
 
+def maxIndexWithUniformSelction(vector):
+    return random.choice([i for i, n in enumerate(vector) if n == max(vector)])
+
 def chooseFromDistribution( distribution ):
     "Takes either a counter or a list of (prob, key) pairs and samples"
     if type(distribution) == dict or type(distribution) == Counter:
