@@ -12,16 +12,8 @@ Run: `python crawler.py`
 ### Q-Learning (approximation)
 
 <p align="center">
-<img src="https://drive.google.com/uc?export=view&id=1QuUzKRB1iXJFpOhzUaUgcuGGCbA0-JK7">
+<img src="http://latex.codecogs.com/gif.latex?%24Q%28s%2C%20a%29%3D%5Csum_%7Bi%3D1%7D%5E%7Bn%7D%20f_%7Bi%7D%28s%2C%20a%29%20w_%7Bi%7D%24">
 </p>
-
-<p align="center">
-<span class="math display">\[Q(s, a)=\sum_{i=1}^{n} f_{i}(s, a) w_{i}\]</span>
-</p>
-
-*w*<sub>*i*</sub> ← *w*<sub>*i*</sub> + *α*⋅ difference ⋅ *f*<sub>*i*</sub>(*s*, *a*)
-
-difference = (*r*+*γ*max<sub>*a*<sup>′</sup></sub>*Q*(*s*<sup>′</sup>,*a*<sup>′</sup>)) − *Q*(*s*, *a*)
 
 
 Run: `python pacman.py -p ApproximateQAgent -a extractor=SimpleExtractor -x 50 -n 60 -l mediumGrid`
