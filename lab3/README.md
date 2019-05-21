@@ -8,6 +8,12 @@
 <img src="http://latex.codecogs.com/gif.latex?%5Cdpi%7B120%7D%20h_%7BM%20A%20P%7D%3D%5Carg%20%5Cmax%20_%7Bh_%7Bi%7D%20%5Cin%20H%7D%20P%5Cleft%28h_%7Bi%7D%5Cright%29%20%5Cprod_%7Bj%7D%20P%5Cleft%28f_%7Bj%7D%20%7C%20h_%7Bi%7D%5Cright%29">
 </p>
 
+Smoothing:
+<p align="center">
+<img src="http://latex.codecogs.com/gif.latex?%5Cdpi%7B120%7D%20%5Chat%7B%5Ctheta%7D_%7Bi%7D%3D%5Cfrac%7Bx_%7Bi%7D&plus;%5Calpha%7D%7BN&plus;%5Calpha%20d%7D">
+</p>
+
+
 Run: `python classifier.py -t 1`
 
 ## Reinforcement Learning
