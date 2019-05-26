@@ -14,8 +14,9 @@ Smoothing:
 </p>
 
 
-Run: `python classifier.py -t 1`
-
+Run: `python classifier.py -t 1`  
+Run: `python classifier.py --train contest_training --test contest_test -s 1 -l 1`  
+->run the naive Bayes classifier on thecontest dataset with smoothing=1 and log scale transformation
 ## Reinforcement Learning
 ### Value iteration
 <p align="center">
@@ -61,3 +62,6 @@ Run: `python crawler.py`
 Run: `python pacman.py -p ApproximateQAgent -a extractor=SimpleExtractor -x 50 -n 60 -l mediumGrid`
 
 Run: `python pacman.py -p ApproximateQAgent -a extractor=SimpleExtractor -x 50 -n 60 -l mediumClassic`
+
+x-> number of train games   
+n-> train games + test games
