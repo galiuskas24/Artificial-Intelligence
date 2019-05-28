@@ -19,7 +19,7 @@ We do that because we have limited train data and we can not assert with certain
 
 NOTE 2:
 In Bayes formula, if we multiply a lot of small probabilities the result could be a very small number 
-(so small that we can not store them to double or long double) and we need to use logarithm.
+(so small that we can not store them into double or long double) and we need to use logarithm function.
 Logarithm is monotone function and probabilities will be properly transformed.
 
 <p align="center">
