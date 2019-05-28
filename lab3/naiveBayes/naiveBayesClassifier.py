@@ -87,7 +87,19 @@ class NaiveBayesClassifier(object):
         To get the list of all possible features or labels, use self.features and
         self.legalLabels.
         """
-        return self.calculateProbabilities(instance, lambda x: x)
+        joint = util.Counter()
+
+        for label in self.legalLabels:
+            # calculate the joint probabilities for each class
+            # P(Hi)*P(Fj*...*Fk | Hi)
+            prob = self.prior[label]
+
+            for feature in self.features:
+                prob *= self.conditionalProb[(feature, label, instance[feature])]
+
+            joint[label] = prob
+
+        return joint
 
 
     def calculateLogJointProbabilities(self, instance):
@@ -99,20 +111,17 @@ class NaiveBayesClassifier(object):
         To get the list of all possible features or labels, use self.features and
         self.legalLabels.
         """
-        return self.calculateProbabilities(instance, lambda x: math.log(x))
-
-    def calculateProbabilities(self, instance, function):
-
         joint = util.Counter()
 
         for label in self.legalLabels:
             # calculate the joint probabilities for each class
             # P(Hi)*P(Fj*...*Fk | Hi)
-            prob = self.prior[label]
+            prob = math.log(self.prior[label])
 
             for feature in self.features:
-                prob *= self.conditionalProb[(feature, label, instance[feature])]
+                prob += math.log(self.conditionalProb[(feature, label, instance[feature])])
 
-            joint[label] = function(prob)
+            joint[label] = prob
 
         return joint
+
