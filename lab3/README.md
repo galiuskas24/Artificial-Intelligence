@@ -18,11 +18,12 @@ We are using smoothing because we want to give the small probability for somethi
 We do that because we have limited train data and we can not assert with certainty that the probability will be 0.
 
 NOTE 2:
-Also for very small values (so small that we can not store them to double or long double) we need to use logarithm.
-Logarithm is monotone function and probabilities will be in same amount before logarithm transformation.
+In Bayes formula, if we multiply a lot of small probabilities the result could be a very small number 
+(so small that we can not store them to double or long double) and we need to use logarithm.
+Logarithm is monotone function and probabilities will be properly transformed.
 
 <p align="center">
-<img src="http://latex.codecogs.com/gif.latex?%5Cdpi%7B120%7D%20%5Cbegin%7Balign*%7D%20P%28Hi%7CFj...Fk%29%20%26%3D%20P%28Hi%29*P%28Fj*...*Fk%20%7C%20Hi%29%5C%5C%20%26%3D%20P%28Hi%29*P%28Fj%29*...*P%28Fk%29%5C%5C%20%26%3D%20log%28P%28Hi%29*P%28Fj*...*Fk%20%7C%20Hi%29%29%20%5C%5C%20%26%3D%20log%28P%28Hi%29%29%20&plus;%20log%28P%28Fj%7CHi%29%29&plus;...&plus;log%28P%28Fk%7CHi%29%29%20%5Cend%7Balign*%7D">
+<img src="http://latex.codecogs.com/gif.latex?%5Cdpi%7B120%7D%20%5Cbegin%7Balign*%7D%20P%28Hi%7CFj...Fk%29%20%26%3D%20P%28Hi%29*P%28Fj*...*Fk%20%7C%20Hi%29%5C%5C%20%26%3D%20P%28Hi%29*P%28Fj%29*...*P%28Fk%29%5C%5C%20%5C%5C%20log%28P%28Hi%7CFj...Fk%29%29%20%26%3D%20log%28P%28Hi%29*P%28Fj*...*Fk%20%7C%20Hi%29%29%20%5C%5C%20%26%3D%20log%28P%28Hi%29%29%20&plus;%20log%28P%28Fj%7CHi%29%29&plus;...&plus;log%28P%28Fk%7CHi%29%29%20%5Cend%7Balign*%7D">
 </p>
 
 
