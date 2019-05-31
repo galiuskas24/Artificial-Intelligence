@@ -55,14 +55,24 @@ class GeneticAlgorithm(object):
 
 		"""
 		
-		self.i += 1 
+		self.i += 1
+		new_population = []
 
-		#############################
-		#       YOUR CODE HERE      #
-		#############################
+		# elitism
+		new_population += self.bestN(self.keep)
 
-		pass
+		while len(new_population) < self.populationSize:
+			parent1, parent2 = self.selectParents()
+			child = self.crossover(parent1, parent2)
+			self.mutate(child)
+			new_population.append((child, self.calculateFitness(child)))
 
+		self.population = sorted(new_population, key=lambda t: -t[1])
+
+		best_weight = self.best()
+		stop_condition = self.i == self.numIter or self.f(best_weight) < self.e
+
+		return stop_condition, self.i, best_weight
 
 	def calculateFitness(self, chromosome):
 		"""
@@ -71,28 +81,22 @@ class GeneticAlgorithm(object):
 		"""
 		chromosomeError = self.f(chromosome)
 
-		#############################
-		#       YOUR CODE HERE      #
-		#############################
-		pass
+		#return -chromosomeError
+		return 1./chromosomeError
 
 	def bestN(self, n):		
 		"""
 			Return the best n units from the population
 		"""
-		#############################
-		#       YOUR CODE HERE      #
-		#############################
-		pass
+
+		return self.population[:n]
 
 	def best(self):
 		"""
 			Return the best unit from the population
 		"""
-		#############################
-		#       YOUR CODE HERE      #
-		#############################
-		pass 
+
+		return self.population[0][0]
 
 	def selectParents(self):
 		"""
@@ -100,30 +104,41 @@ class GeneticAlgorithm(object):
 			selection proportional to the fitness of the units in the
 			population		
 		"""
-		#############################
-		#       YOUR CODE HERE      #
-		#############################
-		pass
+		fitness_vec = [fitness for chromosome, fitness in self.population]
 
-	def crossover(self, p1, p2): 
+		# normalization
+		#min_value = abs(min(fitness_vec))*1.01
+		#fitness_vec = [fit + min_value for fit in fitness_vec]
+
+		fitness_sum = sum(fitness_vec)
+		fitness_vec = [fit / fitness_sum for fit in fitness_vec]
+		fitness_cumsum = np.cumsum(fitness_vec)
+
+
+		parents = []
+		while len(parents) < 2:
+			pick = np.random.random()  # [0, 1)
+			parent = np.searchsorted(fitness_cumsum, pick, side='left')
+			if parent not in parents: parents.append(parent)
+
+		return self.population[parents[0]][0], self.population[parents[1]][0]
+
+
+	def crossover(self, p1, p2):
 		"""
 			Given two parent units p1 and p2, do a simple crossover by 
 			averaging their values in order to create a new child unit
 		"""
-		#############################
-		#       YOUR CODE HERE      #
-		#############################
-		pass
+
+		return (p1 + p2)/2.
 
 	def mutate(self, chromosome):
 		"""
 			Given a unit, mutate its values by applying gaussian noise
 			according to the parameter k
 		"""
+		length = len(chromosome)
 
-		#############################
-		#       YOUR CODE HERE      #
-		#############################
-		pass 
-
-
+		prob_of_mutation = np.random.random(length)
+		index_to_mutate = (prob_of_mutation < self.p).astype(int)
+		chromosome += index_to_mutate*np.random.normal(scale=self.k, size=length)
