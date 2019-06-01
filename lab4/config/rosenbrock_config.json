@@ -1,0 +1,13 @@
+{
+    "hidden_layers": "20-relu",
+    "elitism": 5,
+    "populationSize": 30,
+    "mutationProbability": 0.05,
+    "mutationScale": 1,
+    "numIterations": 10000,
+    "errorThreshold": 1e-6,
+    "print_every": 500,
+    "plot_every": 2000,
+    "train_data_path": "rosenbrock_train.txt",
+    "test_data_path": "rosenbrock_test.txt"
+}
