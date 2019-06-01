@@ -1,143 +1,142 @@
 from networkLayers import *
-from transferFunctions import * 
-from neuralNet import * 
-from geneticAlgorithm import * 
-
+from transferFunctions import *
+from neuralNet import *
+from geneticAlgorithm import *
 import plotter
+import matplotlib.pyplot as plt
 import numpy as np
 import dataLoader
-import os, sys 
+import os, sys
+import json
 
-###
-#   Global constants, I/O paths
-###
 
-SIN_TRAIN = os.path.join('data','sine_train.txt')
-SIN_TEST = os.path.join('data','sine_test.txt')
+'''
+# --------------------CONFIG FILE FORMAT------------------------
+config['hidden_layers']       -> Hidden layers architecture
+config['elitism']             -> Keep this many of top units in each iteration
+config['populationSize']      -> The number of chromosomes
+config['mutationProbability'] -> Probability of mutation
+config['mutationScale']       -> Standard deviation of the gaussian noise
+config['numIterations']       -> Number of iterations to run the genetic algorithm for
+config['errorThreshold']      -> Lower threshold for the error while optimizing
+config['train_data_path']     -> Path of train data file
+config['test_data_path']      -> Path of test data file
+'''
 
-RASTRIGIN_TRAIN = os.path.join('data','rastrigin_train.txt')
-RASTRIGIN_TEST = os.path.join('data','rastrigin_test.txt')
 
-ROSENBROCK_TRAIN = os.path.join('data','rosenbrock_train.txt')
-ROSENBROCK_TEST = os.path.join('data','rosenbrock_test.txt')
+def load_config(path):
+    with open(path) as f:
+        data = json.load(f)
+
+    return data
+
+
+def parse_function(function):
+    function = function.lower()
+
+    if function == "relu": real_function = reLU
+    elif function == "sigmoid": real_function = sigmoid
+    elif function == "leakyrelu": real_function = leakyReLU
+    elif function == "tanh": real_function = tanh
+    else: real_function = None
+
+    return real_function
+
+
+def create_model(NN, architecture):
+
+    print "ARCHITECTURE:", architecture
+    last_layer = None
+
+    for layer in architecture.split('-'):
+        if layer.isdigit():
+            if not last_layer: last_layer = int(layer)
+            else:
+                this_layer = int(layer)
+                NN.addLayer(LinearLayer(last_layer, this_layer))
+                last_layer = this_layer
+        else:
+            NN.addLayer(FunctionLayer(parse_function(layer)))
+
 
 if __name__ == '__main__':
-	# set the random seed for reproducibility of results
-	# setting the random seed forces the same results of randoming each
-	# time you start the program - that way you can demonstrate your results
-	np.random.seed(11071998)
+
+    # --------------LOAD CONFIGURATION-------------------
+    config_path = sys.argv[1] if len(sys.argv) > 1 else "config/sin_config.json"
+    config = load_config(config_path)
+    if len(sys.argv) > 2: config['hidden_layers'] = sys.argv[2] # set hidden layers with arg
+
+    TRAIN = os.path.join('data', config['train_data_path'])
+    TEST = os.path.join('data', config['test_data_path'])
+
+    # Setting the random seed forces the same results of randoming each time you start the program
+    np.random.seed(11071998)
+
+    X_train, y_train = dataLoader.loadFrom(TRAIN)
+    X_test, y_test = dataLoader.loadFrom(TEST)
+
+    print "Train data shapes: ", X_train.shape, y_train.shape
+    print "Test data shapes: ", X_test.shape, y_test.shape
+
+    # The dimensionality of the input layer of the network is the second dimension of the shape
+    input_size = X_train.shape[1] if len(X_train.shape) > 1 else 1
+
+    # The size of the output layer
+    output_size = 1
+
+    # -------------DEFINE NEURAL NETWORK---------------------
+    NN = NeuralNetwork()
+    layers = str(input_size) + '-' + config['hidden_layers'] + '-' + str(output_size)
+    create_model(NN, layers)
 
 
-	# Load the train / test data
-	# X is the input matrix, y is the target vector
-	# X can be a vector (and will be, in the first assignment) as well 
+    def errorClosure(w):
+        """
+            A closure is a variable that stores a function along with the environment.
+            The environment, in this case are the variables x, y as well as the NN
+            object representing a neural net. We store them by defining a method inside
+            a method where those values have been initialized. This is a "hacky" way of
+            enforcing the genetic algorithm to work in a generalized manner. This way,
+            the genetic algorithm can be applied to any problem that optimizes an error
+            (in this case, this function) by updating a vector of values (in this case,
+            defined only by the initial size of the vector).
 
-	"""
-		To change the function being approximated, just change the paths 
-		to the dataset in the arguments of the data loader.s
-	"""
-	X_train, y_train = dataLoader.loadFrom(RASTRIGIN_TRAIN)
-	X_test, y_test = dataLoader.loadFrom(RASTRIGIN_TEST)
+            In plain - the genetic algorithm doesn't know that the neural network exists,
+            and the neural network doesn't know that the genetic algorithm exists.
+        """
+        # Set the weights to the pre-defined network
+        NN.setWeights(w)
+        # Do a forward pass of the network and evaluate the error according to the oracle (y)
+        return NN.forwardStep(X_train, y_train)
 
-	# for check, print out the shapes of the input variables
-	# the first dimension is the number of input samples, the second dimension
-	# is the number of variables 
+    # --------------GA SIMULATION-------------------
+    print_every = config['print_every']
+    plot_every = config['plot_every']
 
-	print "Train data shapes: ", X_train.shape, y_train.shape 
-	print "Test data shapes: ", X_test.shape, y_test.shape 
+    GA = GeneticAlgorithm(NN.size(), errorClosure,
+                          elitism=config['elitism'],
+                          populationSize=config['populationSize'],
+                          mutationProbability=config['mutationProbability'],
+                          mutationScale=config['mutationScale'],
+                          numIterations=config['numIterations'],
+                          errorThreshold=config['errorThreshold'])
 
-	# The dimensionality of the input layer of the network is the second
-	# dimension of the shape
-	input_size = X_train.shape[1] if len(X_train.shape) > 1 else 1
+    # emulated do-while loop
+    done = False
+    while not done:
+        done, iteration, best = GA.step()
 
+        if iteration % print_every == 0:
+            print "Error at iteration %d = %f" % (iteration, errorClosure(best))
 
-	# the size of the output layer
-	output_size = 1
+        if iteration % plot_every == 0:
+            NN.setWeights(best)
+            plotter.plot(X_train, y_train, NN.output(X_train))
+            plotter.plot_surface(X_train, y_train, NN)
 
-	for i in [13]:
-		np.random.seed(11071998)
-		print "HIDDEN:", i
-		# Define Neural Network
-		NN = NeuralNetwork()
+    print "Training done, running on test set"
+    NN.setWeights(best)
 
-		hidden_layers = [i]
-		layers = [input_size] + hidden_layers + [output_size]
-
-		for input, output in zip(layers[:-2], layers[1:-1]):
-			NN.addLayer(LinearLayer(input, output))
-			NN.addLayer(FunctionLayer(reLU))
-
-		NN.addLayer(LinearLayer(layers[-2], layers[-1]))
-
-
-
-		elitism = 5 # Keep this many of top units in each iteration
-		populationSize = 30 # The number of chromosomes
-		mutationProbability  = .045 # Probability of mutation
-		mutationScale = 1 # Standard deviation of the gaussian noise
-		numIterations = 10000 # Number of iterations to run the genetic algorithm for
-		errorTreshold = 1e-6 # Lower threshold for the error while optimizing
-
-
-		def errorClosure(w):
-			"""
-				A closure is a variable that stores a function along with the environment.
-				The environment, in this case are the variables x, y as well as the NN
-				object representing a neural net. We store them by defining a method inside
-				a method where those values have been initialized. This is a "hacky" way of
-				enforcing the genetic algorithm to work in a generalized manner. This way,
-				the genetic algorithm can be applied to any problem that optimizes an error
-				(in this case, this function) by updating a vector of values (in this case,
-				defined only by the initial size of the vector).
-
-				In plain - the genetic algorithm doesn't know that the neural network exists,
-				and the neural network doesn't know that the genetic algorithm exists.
-			"""
-			# Set the weights to the pre-defined network
-			NN.setWeights(w)
-			# Do a forward pass of the etwork and evaluate the error according to the
-			# oracle (y)
-			return NN.forwardStep(X_train, y_train)
-
-		# Check the constructor (__init__) of the GeneticAlgorithm for further instructions
-		# on what the parameters are. Feel free to change / adapt any parameters. The defaults
-		# are as follows
-
-
-		#######################################
-		#    MODIFY CODE AT WILL FROM HERE    #
-		#######################################
-
-
-
-		GA = GeneticAlgorithm(NN.size(), errorClosure,
-			elitism = elitism,
-			populationSize = populationSize,
-			mutationProbability = mutationProbability,
-			mutationScale = mutationScale,
-			numIterations = numIterations,
-			errorTreshold = errorTreshold)
-
-
-		print_every = 1000 # Print the output every this many iterations
-		plot_every = 10000 # Plot the actual vs estimated functions every this many iterations
-
-		# emulated do-while loop
-		done = False
-		while not done:
-			done, iteration, best = GA.step()
-
-			if iteration % print_every == 0:
-				print "Error at iteration %d = %f" % (iteration, errorClosure(best))
-
-			if iteration % plot_every == 0:
-				NN.setWeights(best)
-				plotter.plot(X_train, y_train, NN.output(X_train))
-				plotter.plot_surface(X_train, y_train, NN)
-
-		print "Training done, running on test set"
-		NN.setWeights(best)
-
-		print "Error on test set: ", NN.forwardStep(X_test, y_test)
-		plotter.plot(X_test, y_test, NN.output(X_test))
-		plotter.plot_surface(X_test, y_test, NN)
+    print "Error on test set: ", NN.forwardStep(X_test, y_test)
+    plotter.plot(X_test, y_test, NN.output(X_test))
+    plotter.plot_surface(X_test, y_test, NN)
