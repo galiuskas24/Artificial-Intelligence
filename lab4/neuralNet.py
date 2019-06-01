@@ -81,10 +81,6 @@ class NeuralNetwork(object):
 			the error on the given true target function values Y
 		"""
 
-        #############################
-        #       YOUR CODE HERE      #
-        #############################
-
         return self.total_error(predictions=self.outputs(X), Y=Y)
 
     def size(self):
