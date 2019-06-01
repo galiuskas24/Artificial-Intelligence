@@ -39,6 +39,7 @@ def plot_2d(X, y_actual, y_predicted=None):
 	plt.plot(X, y_actual, 'g.', label = "Actual values")
 	if not y_predicted is None:
 		plt.plot(X, y_predicted, 'b.', label = "Predicted values")
+	plt.legend(loc="upper right")
 	plt.show()
 
 def plot_3d(X, y_actual, y_predicted=None):
@@ -97,7 +98,7 @@ def plot_surface_2d(X, y_actual, NN):
 	xs = xs.reshape(xs.shape[0], -1)
 
 	plt.plot(xs, NN.output(xs), 'b', label = "Predicted surface")
-
+	plt.legend(loc="upper right")
 	plt.show()
 
 def plot_surface_3d(X, y_actual, NN):
