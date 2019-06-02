@@ -103,7 +103,7 @@ Error on test set:  2758.93894153
 ```
 Real function:
 <p align="center">
-  <img width="460" height="300" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Rosenbrock_function.svg/450px-Rosenbrock_function.svg.png" title="Rosenbrock function">
+  <img width="460" height="300" src="http://www.cs.bham.ac.uk/research/projects/ecb/data/4/rose.png" title="Rosenbrock function">
 </p>    
 <p align="center">Rosenbrock function<p align="center">
 
