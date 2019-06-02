@@ -1,4 +1,4 @@
-# ANN (wights trained with GA)
+# ANN (weights trained with GA)
 The artificial neural network (ANN) whose weights are trained by genetic algorithm (GA).
 
 ### Requirements
