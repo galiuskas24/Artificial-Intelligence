@@ -1,8 +1,8 @@
 {
-    "hidden_layers": "7-sigmoid-3-3",
+    "hidden_layers": "20-relu",
     "elitism": 5,
     "populationSize": 30,
-    "mutationProbability": 0.1,
+    "mutationProbability": 0.05,
     "mutationScale": 1,
     "numIterations": 10000,
     "errorThreshold": 1e-6,
