@@ -11,7 +11,7 @@ How to run: `python runner.py [config_file] [architecture]`  //optional args
 Do not support: `python runner.py architecture` //must be config file if front of architecture
 
 
-### Sine function
+## Sine function
 Configuration file:`config/sin_config.json`  
 Run: `python runner.py config/sin_config.json`  
 Results:
@@ -28,18 +28,20 @@ Error at iteration 4000 = 0.000325
 Training done, running on test set
 Error on test set:  0.000295252571136
 ```
+Real function:  
 <p align="center">
   <img width="460" height="300" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Sine_one_period.svg/330px-Sine_one_period.svg.png" title="Sine function">
 </p>    
 <p align="center">Sine function<p align="center">
 
+Our approximation of function:   
 <p align="center">
   <img width="460" height="300" src="readme_materials/sine_aprox.png" title="Sine aproximation">
 </p>   
 <p align="center">Sine aproximation<p align="center">
 
 
-### Rastrigin function
+## Rastrigin function
 Configuration file:`config/rastrigin_config.json`   
 Run: `python runner.py config/rastrigin_config.json`  
 Results:
@@ -56,18 +58,20 @@ Error at iteration 4000 = 1.177138
 Training done, running on test set
 Error on test set:  2.24786418972
 ```
+Real function:  
 <p align="center">
   <img width="460" height="300" src="https://upload.wikimedia.org/wikipedia/commons/8/8b/Rastrigin_function.png" title="Rastrigin function">
 </p>    
 <p align="center">Rastrigin function<p align="center">
 
+Our approximation of function:  
 <p align="center">
   <img width="460" height="300" src="readme_materials/rastrigin_aprox.png" title="Rastrigin aproximation">
 </p>   
 <p align="center">Rastrigin aproximation<p align="center">
 
 
-### Rosenbrock function
+## Rosenbrock function
 Configuration file:`config/rosenbrock_config.json`   
 Run: `python runner.py config/rosenbrock_config.json`  
 Results:
@@ -97,12 +101,13 @@ Training done, running on test set
 Error on test set:  2758.93894153
 
 ```
+Real function:
 <p align="center">
   <img width="460" height="300" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Rosenbrock_function.svg/450px-Rosenbrock_function.svg.png" title="Rosenbrock function">
 </p>    
 <p align="center">Rosenbrock function<p align="center">
 
-
+Our approximation of function:  
 <p align="center">
   <img width="460" height="300" src="readme_materials/rosenbrock_aprox.png" title="Rosenbrock aproximation">
 </p>   
