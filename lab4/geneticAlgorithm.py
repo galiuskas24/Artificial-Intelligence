@@ -64,8 +64,7 @@ class GeneticAlgorithm(object):
 
 		# create new population
 		while len(new_population) < self.populationSize:
-			parent1, parent2 = self.selectParents()
-			child = self.crossover(parent1, parent2)
+			child = self.crossover(*self.selectParents())
 			self.mutate(child)
 			new_population.append((child, self.calculateFitness(child)))
 
